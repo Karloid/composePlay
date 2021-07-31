@@ -1,31 +1,50 @@
 package com.krld.composeplay
 
 class State {
+    var selectedChat: Chat? = null
     val chats = mutableListOf<Chat>()
     lateinit var currentUser: User
 
     companion object {
-        fun generate(messagesInChat: Int): State {
 
-            val texts = mutableListOf(
-                "Hello",
-                "Android",
-                "How are you",
-                "This code creates two text element",
-                "Good thing that we still walking",
-            )
+        private val avatarResId = mutableListOf(
+            R.drawable.cat1,
+            R.drawable.cat2,
+            R.drawable.cat3,
+            R.drawable.cat4,
+            R.drawable.cat5,
+            R.drawable.cat6,
+        )
+        val texts = mutableListOf(
+            "Hello",
+            "Android",
+            "How are you",
+            "This code creates two text element",
+            "Good thing that we still walking",
+            "Import this sample dataset into your project to help bootstrap the conversation quickly:",
+        )
+
+        val names = mutableListOf(
+            "Vasya",
+            "Petya",
+            "Artem",
+            "Alex",
+            "Gena",
+            "Stewart",
+            "John",
+            "Boris",
+        )
+
+        fun generate(messagesInChat: Int): State {
 
             val testData = State()
 
-
-            testData.currentUser = User(1, "Vasya", R.drawable.cat1)
-
             val allUsers = mutableListOf<User>()
-            allUsers.add(testData.currentUser)
-            allUsers.add(User(2, "Petya", R.drawable.cat2))
-            allUsers.add(User(3, "Artem", R.drawable.cat3))
-            allUsers.add(User(4, "Alex", R.drawable.cat4))
+            repeat(50) {
+                allUsers.add(User(it.toLong(), names.random(), avatarResId.random()))
+            }
 
+            testData.currentUser = allUsers.random()
 
             allUsers.forEach { u ->
                 val chat = Chat()
@@ -37,7 +56,8 @@ class State {
                 repeat(messagesInChat) { i ->
 
                     usersPair.shuffle()
-                    val msgs = Message(usersPair.first(), usersPair.last(), ts + i * 5_999, texts.random())
+                    val msgs =
+                        Message(usersPair.first(), usersPair.last(), ts + i * 5_999, texts.random())
                     chat.messages.add(msgs)
                 }
 
