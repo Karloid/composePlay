@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,7 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -60,11 +62,18 @@ class MainActivity : ComponentActivity() {
     private @Composable
     fun ChatScreen(state: State, selectedChat: Chat) {
         Column {
-            Row {
-                UserAvatar(selectedChat.withUser)
-                Spacer(modifier = Modifier.size(4.dp))
-                Text(text = "Chat with ${selectedChat.withUser.username}")
-            }
+            ChatHeader(selectedChat)
+
+
+        }
+    }
+
+    @Composable
+    private fun ChatHeader(selectedChat: Chat) {
+        Row {
+            UserAvatar(selectedChat.withUser)
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(text = "Chat with ${selectedChat.withUser.username}")
         }
     }
 
@@ -75,7 +84,7 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Logged as ${state.currentUser.username}")
                 LazyColumn() {
                     items(state.chats) {
-                        ChatBubble(state, it)
+                        ChatCell(state, it)
                     }
                 }
             }
@@ -84,11 +93,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ChatBubble(state: State, chat: Chat) {
+fun ChatCell(state: State, chat: Chat) {
+
+
+    var isExpanded by remember { mutableStateOf(false) }
 
     Surface(modifier = Modifier.clickable {
         Log.d(TAG, "On click")
+        isExpanded = !isExpanded
     }) {
+
         Column(
             modifier = Modifier.fillMaxWidth(1f)
         ) {
@@ -106,10 +120,28 @@ fun ChatBubble(state: State, chat: Chat) {
                     val lastMsg = chat.messages.last()
                     val lastMsgText = "${lastMsg.from.username}: ${lastMsg.text}"
 
-                    Surface(shape = MaterialTheme.shapes.medium, elevation = 1.dp) {
+
+                    val surfaceColor: Color by animateColorAsState(
+                        if (isExpanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+                    )
+
+                    Surface(
+                        color = surfaceColor,
+                        shape = MaterialTheme.shapes.medium,
+                        elevation = 1.dp,
+                        modifier = Modifier
+                            .animateContentSize()
+                            .padding(1.dp)
+                    ) {
+                        var modifier = Modifier.padding(all = 4.dp)
+                        if (isExpanded) {
+                            modifier = modifier
+                                .width(100.dp)
+                        }
                         Text(
                             text = lastMsgText,
-                            modifier = Modifier.padding(all = 4.dp),
+                            modifier = modifier,
+
                             style = MaterialTheme.typography.body2
                         )
                     }
@@ -120,7 +152,6 @@ fun ChatBubble(state: State, chat: Chat) {
                 color = Color.Gray,
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
-                    .alpha(0f)
                     .height(1.dp)
                     .fillMaxWidth(1f)
             ) {
