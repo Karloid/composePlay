@@ -18,13 +18,13 @@ class State {
             val testData = State()
 
 
-            testData.currentUser = User(1, "Vasya")
+            testData.currentUser = User(1, "Vasya", R.drawable.cat1)
 
             val allUsers = mutableListOf<User>()
             allUsers.add(testData.currentUser)
-            allUsers.add(User(2, "Petya"))
-            allUsers.add(User(3, "Artem"))
-            allUsers.add(User(4, "Alex"))
+            allUsers.add(User(2, "Petya", R.drawable.cat2))
+            allUsers.add(User(3, "Artem", R.drawable.cat3))
+            allUsers.add(User(4, "Alex", R.drawable.cat4))
 
 
             allUsers.forEach { u ->
