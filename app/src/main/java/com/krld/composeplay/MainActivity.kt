@@ -11,14 +11,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.krld.composeplay.ui.theme.ComposePlayTheme
 
 class MainActivity : ComponentActivity() {
+
+    val state = State.generate(1000)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
-            ComposePlayTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
+            MainUi(state)
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    private fun MainUi(state: State = State.generate(20)) {
+        ComposePlayTheme {
+            Surface(color = MaterialTheme.colors.background) {
+                Greeting("Android 123")
             }
         }
     }
@@ -27,12 +37,4 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ComposePlayTheme {
-        Greeting("Android")
-    }
 }
