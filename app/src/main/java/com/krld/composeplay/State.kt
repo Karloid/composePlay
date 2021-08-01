@@ -1,7 +1,9 @@
 package com.krld.composeplay
 
+import androidx.compose.runtime.mutableStateOf
+
 class State {
-    var selectedChat: Chat? = null
+    var selectedChat = mutableStateOf<Chat?>(null)
     val chats = mutableListOf<Chat>()
     lateinit var currentUser: User
 
