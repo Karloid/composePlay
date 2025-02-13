@@ -68,13 +68,13 @@ class MainActivity : ComponentActivity() {
 
     @ExperimentalAnimationApi
     @Composable
-    fun FadeAnim(content: @Composable () -> Unit) {
+    fun FadeAnim(content: @Composable AnimatedVisibilityScope.() -> Unit) {
         AnimatedVisibility(
             visible = true,
             enter = fadeIn(initialAlpha = 0.3f),
             exit = fadeOut(),
             content = content,
-            initiallyVisible = false
+           // initiallyVisible = false
         )
     }
 
